@@ -1,0 +1,116 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+class QuizGame:
+    def __init__(self, master):
+        self.master = master
+        self.score = 0
+        self.current_question = 0
+
+        self.questions = [
+            {
+                "question": "What is the capital of France?",
+                "options": ["Berlin", "Madrid", "Paris", "Rome"],
+                "answer": "Paris",
+                "description": "Paris is the capital of France."
+            },
+            {
+                "question": "What is 2 *2 + 4 - 5?",
+                "options": ["3", "4", "5", "6"],
+                "answer": "5",
+                "description": "Follows the rule of BODMAS."
+            },
+            {
+                "question": "What is the minimum age of an adult for voting in India?",
+                "options": ["18", "14", "15", "16"],
+                "answer": "18",
+                "description": "The miminum age for voting in India is 18."
+            },
+            {
+                "question": "How many UTs are ther in India?",
+                "options": ["3", "8", "5", "6"],
+                "answer": "8",
+                "description": "There are total 8 UTs in India."
+            },
+            {
+                "question": "How many colors are there in the sunlight?",
+                "options": ["7", "9", "5", "6"],
+                "answer": "7",
+                "description": "The sunlight consists of 7 colors-Violet,Indigo,Blue,Green,Yellow,Orange,Red"
+            },
+            # Add more questions here
+        ]
+        
+        self.master.configure(bg="#ba0473") #deep pink
+        self.master.title("Quiz Game")
+        self.master.geometry("400x400")
+        #self.master.maxsize(600,400)
+
+        self.question_label = ttk.Label(master, text="Q.", font=("Arial", 12, "bold"), wraplength=500, foreground="#b8078c", background="white")
+        self.question_label.pack(pady=(60, 10))
+
+        self.option_buttons = []
+        for i in range(4):
+            button = ttk.Button(master, text="", command=lambda i=i: self.check_answer(i), style='TButton')
+            button.pack(pady=5, padx=8, ipadx=8, ipady=5, fill=tk.X)
+            self.option_buttons.append(button)
+    
+        
+        self.next_question()
+        
+        self.style = ttk.Style()
+        self.style.configure('TButton', background='#ffccd5', foreground='#5a0001')  # Set button colors
+
+    def next_question(self):
+        if self.current_question < len(self.questions):
+            self.question_label.config(text=self.questions[self.current_question]["question"])
+            options = self.questions[self.current_question]["options"]
+            for i in range(4):
+                self.option_buttons[i].config(text=options[i])
+            self.current_question += 1
+        else:
+            self.show_score()
+            
+    def enable_next(self):
+        self.next_button.config(state=tk.NORMAL)
+    
+    def check_answer(self, selected_option):
+        selected_answer = self.questions[self.current_question - 1]["options"][selected_option]
+        correct_answer = self.questions[self.current_question - 1]["answer"]
+        
+        if selected_answer == correct_answer:
+            self.score += 1
+            messagebox.showinfo("Correct!", "You got it right!")
+        else:
+            messagebox.showinfo("Incorrect", f"Sorry, the correct answer is: {correct_answer}")
+        
+        self.next_question()
+
+    def show_score(self):
+        total_questions = len(self.questions)
+        message = f"You got {self.score} out of {total_questions} questions correct.\n\n"
+
+        custom_message_box = tk.Toplevel(self.master)
+        custom_message_box.geometry("400x400")
+        custom_message_box.title("Quiz Finished")
+        
+        ttk.Label(custom_message_box, text=message, font=("Arial", 12)).pack(pady=10, padx=10)
+        
+        for question in self.questions:
+            ttk.Label(custom_message_box, text=f"Q: {question['question']} \nA: {question['answer']}", font=("Arial", 10), justify="left").pack(pady=5, padx=5,anchor="w")
+            
+        if self.score == total_questions:
+            ttk.Label(custom_message_box, text="Congratulations! You got all the questions correct. Great job!", font=("Arial", 10, "bold"), foreground="#008000",justify="left").pack(pady=10, anchor="w")
+        elif self.score >= total_questions // 2:
+            ttk.Label(custom_message_box, text="Good job! You passed the quiz.", font=("Arial", 10, "bold"), foreground="#FFA500",justify="left").pack(pady=10, anchor="w")
+        else:
+            ttk.Label(custom_message_box, text="You need more practice. Keep trying!", font=("Arial", 10, "bold"), foreground="#FF0000",justify="left").pack(pady=10, anchor="w")
+            
+        ttk.Button(custom_message_box, text="OK", command=custom_message_box.destroy).pack(pady=10, padx=10)
+        custom_message_box.transient(self.master)  # Set the message box to be dependent on the main window
+        custom_message_box.grab_set()  
+        
+if __name__ == "__main__":
+    root = tk.Tk()
+    game = QuizGame(root)
+    root.mainloop()
