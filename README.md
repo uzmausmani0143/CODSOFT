@@ -3,9 +3,9 @@
 # 3 Python Tasks
 ## Task 3:Password generator in Python using tkinter library.
 ## Task 4:Weather Forecast in Python using tkinter library(Due to inactivation of API,it may not give the result.) 
-## Task 1:Quiz Game in Python using tkinter library.
+## Task 5:Quiz Game in Python using tkinter library.
 ---------------------------------------------------
-###Task 3: Password Generator
+### Task 3: Password Generator
 Description
 This task focuses on creating a robust password generator that ensures strong and secure passwords for our users. The generator should be able to customize password length, include special characters, and avoid easily guessable patterns.
 
